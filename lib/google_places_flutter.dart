@@ -1,15 +1,11 @@
 library google_places_flutter;
 
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_places_flutter/model/place_details.dart';
 import 'package:google_places_flutter/model/prediction.dart';
-
-import 'package:rxdart/subjects.dart';
-import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/subjects.dart';
 
 class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   InputDecoration inputDecoration;
@@ -23,17 +19,17 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   List<String>? countries = [];
   TextEditingController textEditingController = TextEditingController();
 
-  GooglePlaceAutoCompleteTextField(
-      {required this.textEditingController,
-      required this.googleAPIKey,
-      this.debounceTime: 600,
-      this.inputDecoration: const InputDecoration(),
-      this.itmClick,
-      this.isLatLngRequired=true,
-      this.textStyle: const TextStyle(),
-      this.countries,
-      this.getPlaceDetailWithLatLng,
-      });
+  GooglePlaceAutoCompleteTextField({
+    required this.textEditingController,
+    required this.googleAPIKey,
+    this.debounceTime: 600,
+    this.inputDecoration: const InputDecoration(),
+    this.itmClick,
+    this.isLatLngRequired = true,
+    this.textStyle: const TextStyle(),
+    this.countries,
+    this.getPlaceDetailWithLatLng,
+  });
 
   @override
   _GooglePlaceAutoCompleteTextFieldState createState() =>
@@ -82,9 +78,8 @@ class _GooglePlaceAutoCompleteTextFieldState
       }
     }
 
-
-
-    Response response = await dio.get(url);
+    final encoded = Uri.encodeFull(url);
+    Response response = await dio.get(encoded);
     PlacesAutocompleteResponse subscriptionResponse =
         PlacesAutocompleteResponse.fromJson(response.data);
 
@@ -196,7 +191,8 @@ class _GooglePlaceAutoCompleteTextFieldState
 }
 
 PlacesAutocompleteResponse parseResponse(Map responseBody) {
-  return PlacesAutocompleteResponse.fromJson(responseBody as Map<String, dynamic>);
+  return PlacesAutocompleteResponse.fromJson(
+      responseBody as Map<String, dynamic>);
 }
 
 PlaceDetails parsePlaceDetailMap(Map responseBody) {
