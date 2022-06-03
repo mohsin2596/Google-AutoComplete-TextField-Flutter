@@ -61,8 +61,9 @@ class _GooglePlaceAutoCompleteTextFieldState
 
   getLocation(String text) async {
     Dio dio = new Dio();
+    final encodedText = Uri.encodeComponent(text);
     String url =
-        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$text&key=${widget.googleAPIKey}";
+        "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$encodedText&key=${widget.googleAPIKey}";
 
     if (widget.countries != null) {
       // in
@@ -78,8 +79,7 @@ class _GooglePlaceAutoCompleteTextFieldState
       }
     }
 
-    final encoded = Uri.encodeFull(url);
-    Response response = await dio.get(encoded);
+    Response response = await dio.get(url);
     PlacesAutocompleteResponse subscriptionResponse =
         PlacesAutocompleteResponse.fromJson(response.data);
 
