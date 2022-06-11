@@ -12,7 +12,7 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   ItemClick? itmClick;
   GetPlaceDetailswWithLatLng? getPlaceDetailWithLatLng;
   bool isLatLngRequired = true;
-
+  bool requestFocusOnStart = false;
   TextStyle textStyle;
   String googleAPIKey;
   int debounceTime = 600;
@@ -46,6 +46,8 @@ class _GooglePlaceAutoCompleteTextFieldState
   final LayerLink _layerLink = LayerLink();
   bool isSearched = false;
 
+  final focusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return CompositedTransformTarget(
@@ -53,6 +55,7 @@ class _GooglePlaceAutoCompleteTextFieldState
       child: TextFormField(
         decoration: widget.inputDecoration,
         style: widget.textStyle,
+        focusNode: focusNode,
         controller: widget.textEditingController,
         onChanged: (string) => (subject.add(string)),
       ),
@@ -109,6 +112,13 @@ class _GooglePlaceAutoCompleteTextFieldState
         .distinct()
         .debounceTime(Duration(milliseconds: widget.debounceTime))
         .listen(textChanged);
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      if (widget.requestFocusOnStart) {
+        focusNode.requestFocus();
+      }
+    });
+    super.initState();
   }
 
   textChanged(String text) async {
