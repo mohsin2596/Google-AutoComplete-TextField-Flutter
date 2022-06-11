@@ -12,7 +12,7 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
   ItemClick? itmClick;
   GetPlaceDetailswWithLatLng? getPlaceDetailWithLatLng;
   bool isLatLngRequired = true;
-  bool requestFocusOnStart = false;
+  bool requestFocusOnStart;
   TextStyle textStyle;
   String googleAPIKey;
   int debounceTime = 600;
@@ -23,6 +23,7 @@ class GooglePlaceAutoCompleteTextField extends StatefulWidget {
     required this.textEditingController,
     required this.googleAPIKey,
     this.debounceTime: 600,
+    this.requestFocusOnStart: false,
     this.inputDecoration: const InputDecoration(),
     this.itmClick,
     this.isLatLngRequired = true,
